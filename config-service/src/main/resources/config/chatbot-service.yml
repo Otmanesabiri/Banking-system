@@ -1,0 +1,28 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: chatbot-service
+  ai:
+    azure:
+      openai:
+        endpoint: ${AZURE_OPENAI_ENDPOINT:}
+        api-key: ${AZURE_OPENAI_API_KEY:}
+        embedding-model: text-embedding-3-large
+        chat-model: gpt-4o-mini
+  data:
+    chroma:
+      path: ./data/chroma
+      collection: banking-documents
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

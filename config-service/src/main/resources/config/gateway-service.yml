@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lowerCaseServiceId: true
+      default-filters:
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 10
+            redis-rate-limiter.burstCapacity: 20
+      routes:
+        - id: beneficiaire-service
+          uri: lb://beneficiaire-service
+          predicates:
+            - Path=/api/beneficiaires/**
+          filters:
+            - StripPrefix=1
+        - id: virement-service
+          uri: lb://virement-service
+          predicates:
+            - Path=/api/virements/**
+          filters:
+            - StripPrefix=1
+        - id: chatbot-service
+          uri: lb://chatbot-service
+          predicates:
+            - Path=/api/chatbot/**
+          filters:
+            - StripPrefix=1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
