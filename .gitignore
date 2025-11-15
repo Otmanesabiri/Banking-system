@@ -3,6 +3,8 @@
 
 # Log file
 *.log
+.env
+.env.example
 
 # Maven
 target/
@@ -30,3 +32,6 @@ Thumbs.db
 # Application
 *.db
 *.h2.db
+
+# docs
+detail.md

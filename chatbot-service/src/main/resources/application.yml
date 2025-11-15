@@ -1,17 +1,79 @@
 spring:
   application:
     name: chatbot-service
+  
+  ai:
+    azure:
+      openai:
+        api-key: ${AZURE_OPENAI_API_KEY}
+        endpoint: ${AZURE_OPENAI_ENDPOINT}
+        chat:
+          options:
+            deployment-name: gpt-4.1
+            temperature: 0.7
+            max-tokens: 2000
+        embedding:
+          options:
+            deployment-name: text-embedding-ada-002  # ✅ Votre nouveau déploiement
 
+  # ChromaDB Configuration
+  vectorstore:
+    chroma:
+      client:
+        host: ${CHROMA_HOST:http://localhost:8000}
+      initialize-schema: true
+      collection-name: bank-documents
+
+  # Database H2 (pour stocker les sessions et messages)
+  datasource:
+    url: jdbc:h2:mem:chatbotdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+
+  cloud:
+    discovery:
+      enabled: false
+
+# Server Configuration
 server:
   port: 8083
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics
+# Azure Document Intelligence (optionnel pour OCR avancé)
+azure:
+  document-intelligence:
+    enabled: ${AZURE_DOCUMENT_INTELLIGENCE_ENABLED:false}
+    endpoint: ${AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT:}
+    key: ${AZURE_DOCUMENT_INTELLIGENCE_KEY:}
 
+# Telegram Bot (optionnel)
+telegram:
+  bot:
+    enabled: ${TELEGRAM_BOT_ENABLED:false}
+    token: ${TELEGRAM_BOT_TOKEN:}
+    username: ${TELEGRAM_BOT_USERNAME:}
+
+# Eureka
 eureka:
   client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
+
+# Logging
+logging:
+  level:
+    com.bank.chatbotservice: DEBUG
+    org.springframework.ai: DEBUG

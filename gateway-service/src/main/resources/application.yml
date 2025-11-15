@@ -7,3 +7,6 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
+  profiles:
+    active:
+    - dev
